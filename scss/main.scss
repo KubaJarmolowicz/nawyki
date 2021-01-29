@@ -24,13 +24,12 @@
 		border: 1px solid rgb(207, 10, 43);
 		padding: 1rem;
 		gap: 1rem;
-		overflow-x: scroll;
+		overflow-x: hidden;
 	}
 
 	&__month {
 		height: 100%;
 		border: 1px solid black;
-		width: 100%;
 		flex: 1 0 100%;
 		padding: 1rem;
 	}
@@ -54,5 +53,29 @@
 	&__day {
 		flex: 1 0 25%;
 		border: 1px solid darkmagenta;
+	}
+}
+
+@media (min-width: 630px) {
+	.habit {
+		&__month {
+			flex: 1 0 calc(50% - 0.5rem);
+		}
+	}
+}
+
+@media (min-width: 930px) {
+	.habit {
+		&__month {
+			flex: 1 0 calc(33.3% - 0.625rem);
+		}
+	}
+}
+
+@media (min-width: 1230px) {
+	.habit {
+		&__month {
+			flex: 1 0 calc(25% - 0.75rem);
+		}
 	}
 }
