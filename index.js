@@ -5,24 +5,39 @@ const months = Array.from(document.querySelectorAll(".habit__month"));
 
 const startingListPosition = months[0].getBoundingClientRect().x;
 
-monthList.addEventListener("click", () => {
-	const currentListPosition =
-		startingListPosition - months[0].getBoundingClientRect().x;
+monthList.addEventListener("contextmenu", e => {
+	e.preventDefault();
 
-	const currentViewWidth = document
-		.querySelector(".habit__header")
-		.getBoundingClientRect().width;
+	const currentListPosition = months[0].getBoundingClientRect().x;
 
 	const currentGap =
 		months[1].getBoundingClientRect().x -
 		(months[0].getBoundingClientRect().x +
 			months[0].getBoundingClientRect().width);
 
-	console.log(currentGap);
+	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
+
+	months.forEach(month => {
+		month.style.transform = `translateX(${
+			currentListPosition + currentViewWidth - startingListPosition
+		}px)`;
+	});
+});
+
+monthList.addEventListener("click", () => {
+	const currentListPosition =
+		startingListPosition - months[0].getBoundingClientRect().x;
+
+	const currentGap =
+		months[1].getBoundingClientRect().x -
+		(months[0].getBoundingClientRect().x +
+			months[0].getBoundingClientRect().width);
+
+	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
 	months.forEach(month => {
 		month.style.transform = `translateX(-${
-			currentListPosition + currentViewWidth - currentGap
+			currentListPosition + currentViewWidth
 		}px)`;
 	});
 });
