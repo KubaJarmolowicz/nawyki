@@ -41,3 +41,16 @@ monthList.addEventListener("click", () => {
 		}px)`;
 	});
 });
+
+function callback(entry) {
+	console.log(entry);
+}
+
+let options = {
+	root: document.querySelector(".habit"),
+	threshold: 0,
+};
+
+let observer = new IntersectionObserver(callback, options);
+
+observer.observe(months[1]);
