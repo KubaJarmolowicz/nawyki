@@ -57,7 +57,7 @@ nextBtn.addEventListener("click", () => {
 	});
 });
 
-function isFirstMonthShown(entries) {
+function adjustToStartView(entries) {
 	if (entries[0].isIntersecting) {
 		hideBtn(prevBtn);
 	} else {
@@ -65,7 +65,7 @@ function isFirstMonthShown(entries) {
 	}
 }
 
-function isLastMonthShown(entries) {
+function adjustToEndView(entries) {
 	if (entries[0].isIntersecting) {
 		hideBtn(nextBtn);
 	} else {
@@ -81,69 +81,20 @@ function hideBtn(btn) {
 	btn.style.display = "none";
 }
 
-function getTranslateX(element) {
-	const style = element.style.transform;
-
-	let translateX = style.match(/[\-\+\d\.]+[e]?/g);
-	if (translateX)
-		translateX = translateX.length > 1 ? translateX.join("") : translateX;
-	const translateX_Val = +translateX;
-
-	return translateX_Val;
+function resetTranslate() {
+	allMonths.forEach(month => {
+		month.style.transform = `translateX(0)`;
+	});
 }
 
 const options = {
 	root: document.querySelector(".habit"),
 };
 
-const startObserver = new IntersectionObserver(isFirstMonthShown, options);
-const endObserver = new IntersectionObserver(isLastMonthShown, options);
+const startObserver = new IntersectionObserver(adjustToStartView, options);
+const endObserver = new IntersectionObserver(adjustToEndView, options);
 
 startObserver.observe(allMonths[0]);
 endObserver.observe(allMonths[11]);
 
-window.addEventListener("resize", () => {
-	const visibleMonths = [];
-
-	const resizeOptions = {
-		root: document.querySelector(".habit"),
-		treshold: 1.0,
-	};
-
-	function getVisibleMonths(entries) {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) visibleMonths.push(entry.target);
-		});
-
-		const currentGap =
-			allMonths[1].getBoundingClientRect().x -
-			(allMonths[0].getBoundingClientRect().x +
-				allMonths[0].getBoundingClientRect().width);
-
-		const earliestVisibleMonth = visibleMonths[0];
-
-		const earliestMonthIndex = allMonths.indexOf(earliestVisibleMonth);
-
-		const currentMonthWidth =
-			earliestVisibleMonth.getBoundingClientRect().width + currentGap;
-
-		allMonths.forEach(month => {
-			month.style.transform = `translateX(-${
-				earliestMonthIndex * currentMonthWidth
-			}px)`;
-		});
-
-		allMonths.forEach(month => {
-			monthsObserver.unobserve(month);
-		});
-	}
-
-	const monthsObserver = new IntersectionObserver(
-		getVisibleMonths,
-		resizeOptions
-	);
-
-	allMonths.forEach(month => {
-		monthsObserver.observe(month);
-	});
-});
+window.addEventListener("resize", resetTranslate);
