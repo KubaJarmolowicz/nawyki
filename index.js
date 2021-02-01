@@ -21,6 +21,10 @@ prevBtn.addEventListener("click", () => {
 	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
 	allMonths.forEach(month => {
+		if (currentListPosition + currentViewWidth > startingListPosition) {
+			month.style.transform = `translateX(0)`;
+			return;
+		}
 		month.style.transform = `translateX(${
 			currentListPosition + currentViewWidth - startingListPosition
 		}px)`;
@@ -46,7 +50,17 @@ nextBtn.addEventListener("click", () => {
 
 	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
+	const singleMonthWidth = allMonths[0].getBoundingClientRect().width;
+
+	const monthsOnPage = Math.round(currentViewWidth / singleMonthWidth);
+
+	const maxTranslate = (12 / monthsOnPage - 1) * currentViewWidth;
+
 	allMonths.forEach(month => {
+		if (currentListPosition + currentViewWidth > maxTranslate) {
+			month.style.transform = `translateX(-${maxTranslate}px)`;
+			return;
+		}
 		month.style.transform = `translateX(-${
 			currentListPosition + currentViewWidth
 		}px)`;
@@ -98,3 +112,9 @@ startObserver.observe(allMonths[0]);
 endObserver.observe(allMonths[11]);
 
 window.addEventListener("resize", resetTranslate);
+
+// allMonths.forEach(month => {
+// 	month.style.transform = `translateX(-${
+// 		allMonths[0].getBoundingClientRect().width + 10
+// 	}px)`;
+// });
