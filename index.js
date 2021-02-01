@@ -2,12 +2,12 @@
 
 const monthList = document.querySelector(".habit__months-list");
 const months = Array.from(document.querySelectorAll(".habit__month"));
+const prevBtn = document.querySelector(".habit__button--prev");
+const nextBtn = document.querySelector(".habit__button--next");
 
 const startingListPosition = months[0].getBoundingClientRect().x;
 
-monthList.addEventListener("contextmenu", e => {
-	e.preventDefault();
-
+prevBtn.addEventListener("click", () => {
 	const currentListPosition = months[0].getBoundingClientRect().x;
 
 	const currentGap =
@@ -24,7 +24,7 @@ monthList.addEventListener("contextmenu", e => {
 	});
 });
 
-monthList.addEventListener("click", () => {
+nextBtn.addEventListener("click", () => {
 	const currentListPosition =
 		startingListPosition - months[0].getBoundingClientRect().x;
 
@@ -42,15 +42,36 @@ monthList.addEventListener("click", () => {
 	});
 });
 
-function callback(entry) {
-	console.log(entry);
+function isFirstMonthShown(entries) {
+	if (entries[0].isIntersecting) {
+		hideBtn(prevBtn);
+	} else {
+		showBtn(prevBtn);
+	}
 }
 
-let options = {
+function isLastMonthShown(entries) {
+	if (entries[0].isIntersecting) {
+		hideBtn(nextBtn);
+	} else {
+		showBtn(nextBtn);
+	}
+}
+
+function showBtn(btn) {
+	btn.style.display = "block";
+}
+
+function hideBtn(btn) {
+	btn.style.display = "none";
+}
+
+const options = {
 	root: document.querySelector(".habit"),
-	threshold: 0,
 };
 
-let observer = new IntersectionObserver(callback, options);
+const startObserver = new IntersectionObserver(isFirstMonthShown, options);
+const endObserver = new IntersectionObserver(isLastMonthShown, options);
 
-observer.observe(months[1]);
+startObserver.observe(months[0]);
+endObserver.observe(months[11]);

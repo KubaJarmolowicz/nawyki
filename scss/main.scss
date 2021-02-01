@@ -2,9 +2,31 @@
 @import "./global";
 
 .habit {
+	position: relative;
 	height: 80%;
 	// border: 1px solid green;
 	padding: 1rem;
+
+	&__button {
+		background-color: transparent;
+		border: 40px solid transparent;
+		position: absolute;
+		top: 0;
+
+		cursor: pointer;
+	}
+
+	&__button--prev {
+		border-right-color: red;
+		left: -6.5rem;
+		top: 13rem;
+	}
+
+	&__button--next {
+		border-left-color: red;
+		right: -6.5rem;
+		top: 13rem;
+	}
 
 	&__header {
 		padding: 0.5rem;
