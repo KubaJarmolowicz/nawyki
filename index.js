@@ -1,26 +1,26 @@
 "use strict";
 
 const monthList = document.querySelector(".habit__months-list");
-const months = Array.from(document.querySelectorAll(".habit__month"));
+const allMonths = Array.from(document.querySelectorAll(".habit__month"));
 const prevBtn = document.querySelector(".habit__button--prev");
 const nextBtn = document.querySelector(".habit__button--next");
 
-const startingListPosition = months[0].getBoundingClientRect().x;
+const startingListPosition = allMonths[0].getBoundingClientRect().x;
 
 prevBtn.addEventListener("click", () => {
 	if (monthList.classList.contains("isAnimating")) return;
 
 	monthList.classList.add("isAnimating");
-	const currentListPosition = months[0].getBoundingClientRect().x;
+	const currentListPosition = allMonths[0].getBoundingClientRect().x;
 
 	const currentGap =
-		months[1].getBoundingClientRect().x -
-		(months[0].getBoundingClientRect().x +
-			months[0].getBoundingClientRect().width);
+		allMonths[1].getBoundingClientRect().x -
+		(allMonths[0].getBoundingClientRect().x +
+			allMonths[0].getBoundingClientRect().width);
 
 	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
-	months.forEach(month => {
+	allMonths.forEach(month => {
 		month.style.transform = `translateX(${
 			currentListPosition + currentViewWidth - startingListPosition
 		}px)`;
@@ -37,16 +37,16 @@ nextBtn.addEventListener("click", () => {
 	monthList.classList.add("isAnimating");
 
 	const currentListPosition =
-		startingListPosition - months[0].getBoundingClientRect().x;
+		startingListPosition - allMonths[0].getBoundingClientRect().x;
 
 	const currentGap =
-		months[1].getBoundingClientRect().x -
-		(months[0].getBoundingClientRect().x +
-			months[0].getBoundingClientRect().width);
+		allMonths[1].getBoundingClientRect().x -
+		(allMonths[0].getBoundingClientRect().x +
+			allMonths[0].getBoundingClientRect().width);
 
 	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
-	months.forEach(month => {
+	allMonths.forEach(month => {
 		month.style.transform = `translateX(-${
 			currentListPosition + currentViewWidth
 		}px)`;
@@ -81,6 +81,17 @@ function hideBtn(btn) {
 	btn.style.display = "none";
 }
 
+function getTranslateX(element) {
+	const style = element.style.transform;
+
+	let translateX = style.match(/[\-\+\d\.]+[e]?/g);
+	if (translateX)
+		translateX = translateX.length > 1 ? translateX.join("") : translateX;
+	const translateX_Val = +translateX;
+
+	return translateX_Val;
+}
+
 const options = {
 	root: document.querySelector(".habit"),
 };
@@ -88,5 +99,33 @@ const options = {
 const startObserver = new IntersectionObserver(isFirstMonthShown, options);
 const endObserver = new IntersectionObserver(isLastMonthShown, options);
 
-startObserver.observe(months[0]);
-endObserver.observe(months[11]);
+startObserver.observe(allMonths[0]);
+endObserver.observe(allMonths[11]);
+
+window.addEventListener("resize", async () => {
+	const visibleMonths = await allMonths.reduce((acc, month) => {
+		const monthObserver = new IntersectionObserver(entries => {
+			if (entries[0].isIntersecting) acc.push(month);
+		}, options);
+
+		monthObserver.observe(month);
+		//monthObserver.unobserve(month);
+
+		return acc;
+	}, []);
+
+	// const earliestVisibleMonth = visibleMonths.map(month=>{
+	// 	return {
+	// 		month,
+	// 		x: month.getBoundingClientRect().x
+	// 	}
+	// }).sort(a.x, b.x)
+	console.log(visibleMonths.length);
+
+	// const earliestVisibleMonth = visibleMonths.map(month => {
+	// 	//return month;
+	// 	return allMonths.indexOf(month);
+	// });
+
+	//console.log(earliestVisibleMonth);
+});
