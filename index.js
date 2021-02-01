@@ -102,30 +102,48 @@ const endObserver = new IntersectionObserver(isLastMonthShown, options);
 startObserver.observe(allMonths[0]);
 endObserver.observe(allMonths[11]);
 
-window.addEventListener("resize", async () => {
-	const visibleMonths = await allMonths.reduce((acc, month) => {
-		const monthObserver = new IntersectionObserver(entries => {
-			if (entries[0].isIntersecting) acc.push(month);
-		}, options);
+window.addEventListener("resize", () => {
+	const visibleMonths = [];
 
-		monthObserver.observe(month);
-		//monthObserver.unobserve(month);
+	const resizeOptions = {
+		root: document.querySelector(".habit"),
+		treshold: 1.0,
+	};
 
-		return acc;
-	}, []);
+	function getVisibleMonths(entries) {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) visibleMonths.push(entry.target);
+		});
 
-	// const earliestVisibleMonth = visibleMonths.map(month=>{
-	// 	return {
-	// 		month,
-	// 		x: month.getBoundingClientRect().x
-	// 	}
-	// }).sort(a.x, b.x)
-	console.log(visibleMonths.length);
+		const currentGap =
+			allMonths[1].getBoundingClientRect().x -
+			(allMonths[0].getBoundingClientRect().x +
+				allMonths[0].getBoundingClientRect().width);
 
-	// const earliestVisibleMonth = visibleMonths.map(month => {
-	// 	//return month;
-	// 	return allMonths.indexOf(month);
-	// });
+		const earliestVisibleMonth = visibleMonths[0];
 
-	//console.log(earliestVisibleMonth);
+		const earliestMonthIndex = allMonths.indexOf(earliestVisibleMonth);
+
+		const currentMonthWidth =
+			earliestVisibleMonth.getBoundingClientRect().width + currentGap;
+
+		allMonths.forEach(month => {
+			month.style.transform = `translateX(-${
+				earliestMonthIndex * currentMonthWidth
+			}px)`;
+		});
+
+		allMonths.forEach(month => {
+			monthsObserver.unobserve(month);
+		});
+	}
+
+	const monthsObserver = new IntersectionObserver(
+		getVisibleMonths,
+		resizeOptions
+	);
+
+	allMonths.forEach(month => {
+		monthsObserver.observe(month);
+	});
 });
