@@ -8,6 +8,9 @@ const nextBtn = document.querySelector(".habit__button--next");
 const startingListPosition = months[0].getBoundingClientRect().x;
 
 prevBtn.addEventListener("click", () => {
+	if (monthList.classList.contains("isAnimating")) return;
+
+	monthList.classList.add("isAnimating");
 	const currentListPosition = months[0].getBoundingClientRect().x;
 
 	const currentGap =
@@ -22,9 +25,17 @@ prevBtn.addEventListener("click", () => {
 			currentListPosition + currentViewWidth - startingListPosition
 		}px)`;
 	});
+
+	monthList.addEventListener("transitionend", () => {
+		monthList.classList.remove("isAnimating");
+	});
 });
 
 nextBtn.addEventListener("click", () => {
+	if (monthList.classList.contains("isAnimating")) return;
+
+	monthList.classList.add("isAnimating");
+
 	const currentListPosition =
 		startingListPosition - months[0].getBoundingClientRect().x;
 
@@ -39,6 +50,10 @@ nextBtn.addEventListener("click", () => {
 		month.style.transform = `translateX(-${
 			currentListPosition + currentViewWidth
 		}px)`;
+	});
+
+	monthList.addEventListener("transitionend", () => {
+		monthList.classList.remove("isAnimating");
 	});
 });
 

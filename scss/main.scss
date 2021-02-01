@@ -56,6 +56,9 @@
 		// border: 1px solid black;
 		flex: 1 0 100%;
 		padding: 1rem;
+	}
+
+	&__months-list.isAnimating .habit__month {
 		transition: transform 0.3s ease-in;
 	}
 
@@ -90,6 +93,9 @@
 	.habit {
 		&__month {
 			flex: 1 0 calc(50% - 0.5rem);
+		}
+
+		&__months-list.isAnimating .habit__month {
 			transition: transform 0.45s ease-in;
 		}
 	}
@@ -99,6 +105,9 @@
 	.habit {
 		&__month {
 			flex: 1 0 calc(33.33% - 0.625rem);
+		}
+
+		&__months-list.isAnimating .habit__month {
 			transition: transform 0.55s ease-in;
 		}
 	}
@@ -108,6 +117,9 @@
 	.habit {
 		&__month {
 			flex: 1 0 calc(25% - 0.75rem);
+		}
+
+		&__months-list.isAnimating .habit__month {
 			transition: transform 0.6s ease-in;
 		}
 	}
