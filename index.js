@@ -114,16 +114,14 @@ endObserver.observe(allMonths[11]);
 window.addEventListener("resize", resetTranslate);
 
 (function IIFE() {
-	const startingMonth = allMonths[1];
+	const monthToDisplay = allMonths[9];
 
-	const startingTranslate = getStartingTranslate(startingMonth);
+	const startingTranslateX = calculateTranslateX(monthToDisplay);
 
-	allMonths.forEach(month => {
-		month.style.transform = `translateX(-${startingTranslate}px)`;
-	});
+	scrollToRequestedMonth(startingTranslateX);
 })();
 
-function getStartingTranslate(startingMonth) {
+function calculateTranslateX(monthToDisplay) {
 	const currentGap =
 		allMonths[1].getBoundingClientRect().x -
 		(allMonths[0].getBoundingClientRect().x +
@@ -135,10 +133,26 @@ function getStartingTranslate(startingMonth) {
 
 	const monthsOnPage = Math.round(currentViewWidth / singleMonthWidth);
 
-	const maxTranslate = (12 / monthsOnPage - 1) * currentViewWidth;
+	const maxTranslateX = 0;
 
-	const desiredTranslate =
-		(singleMonthWidth + currentGap) * allMonths.indexOf(startingMonth);
+	const minTranslateX = -1 * ((12 / monthsOnPage - 1) * currentViewWidth);
 
-	return desiredTranslate < maxTranslate ? desiredTranslate : maxTranslate;
+	const desiredTranslateX =
+		-1 * ((singleMonthWidth + currentGap) * allMonths.indexOf(monthToDisplay));
+
+	if (desiredTranslateX > maxTranslateX) {
+		return maxTranslateX;
+	}
+
+	if (desiredTranslateX < minTranslateX) {
+		return `${minTranslateX}px`;
+	}
+
+	return `${desiredTranslateX}px`;
+}
+
+function scrollToRequestedMonth(translateXValue) {
+	allMonths.forEach(month => {
+		month.style.transform = `translateX(${translateXValue})`;
+	});
 }
