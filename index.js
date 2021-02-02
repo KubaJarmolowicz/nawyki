@@ -7,38 +7,14 @@ const nextBtn = document.querySelector(".habit__button--next");
 
 const monthListStartingPosition = getMonthlistXPosition();
 
-prevBtn.addEventListener("click", () => {
-	if (monthList.classList.contains("isAnimating")) return;
+prevBtn.addEventListener("click", displayPreviousMonths);
 
-	monthList.classList.add("isAnimating");
+nextBtn.addEventListener("click", displayFollowingMonths);
 
-	const monthListCurrentPosition = getMonthlistXPosition();
+function displayFollowingMonths() {
+	if (isTransitionPlaying()) return;
 
-	const monthListWidth = getMonthlistWidth();
-
-	const requestedTranslateXValue =
-		monthListCurrentPosition + monthListWidth - monthListStartingPosition;
-
-	sideScrollTo(requestedTranslateXValue);
-
-	if (
-		wouldScrollPastStart(
-			monthListCurrentPosition + monthListWidth,
-			monthListStartingPosition
-		)
-	) {
-		resetTranslate();
-	}
-
-	monthList.addEventListener("transitionend", () => {
-		monthList.classList.remove("isAnimating");
-	});
-});
-
-nextBtn.addEventListener("click", () => {
-	if (monthList.classList.contains("isAnimating")) return;
-
-	monthList.classList.add("isAnimating");
+	disableSideScroll();
 
 	const monthListCurrentPosition =
 		monthListStartingPosition - getMonthlistXPosition();
@@ -47,12 +23,35 @@ nextBtn.addEventListener("click", () => {
 
 	const requestedTranslateX = monthListCurrentPosition + monthListWidth;
 
-	sideScrollTo(requestedTranslateX);
+	if (wouldScrollPastEnd(requestedTranslateX)) {
+		scrollToEnd();
+	} else {
+		sideScrollTo(requestedTranslateX);
+	}
 
-	monthList.addEventListener("transitionend", () => {
-		monthList.classList.remove("isAnimating");
-	});
-});
+	monthList.addEventListener("transitionend", enableSideScroll);
+}
+
+function displayPreviousMonths() {
+	if (isTransitionPlaying()) return;
+
+	disableSideScroll();
+
+	const monthListCurrentPosition = getMonthlistXPosition();
+
+	const monthListWidth = getMonthlistWidth();
+
+	const requestedTranslateXValue =
+		monthListCurrentPosition + monthListWidth - monthListStartingPosition;
+
+	if (wouldScrollPastStart(requestedTranslateXValue)) {
+		scrollToStart();
+	} else {
+		sideScrollTo(requestedTranslateXValue);
+	}
+
+	monthList.addEventListener("transitionend", enableSideScroll);
+}
 
 function getGapWidth() {
 	return (
@@ -74,11 +73,16 @@ function getMonthlistXPosition() {
 	return allMonths[0].getBoundingClientRect().x;
 }
 
-function getDisplayedMonths(singleMonthWidth, monthListWidth) {
+function getDisplayedMonths() {
+	const singleMonthWidth = getSingleMonthWidth();
+	const monthListWidth = getMonthlistWidth();
+
 	return Math.round(monthListWidth / singleMonthWidth);
 }
 
-function getMaxTranslateX(monthsCurrentlyDisplayed, monthListWidth) {
+function getMaxTranslateX() {
+	const monthsCurrentlyDisplayed = getDisplayedMonths();
+	const monthListWidth = getMonthlistWidth();
 	return -1 * ((12 / monthsCurrentlyDisplayed - 1) * monthListWidth);
 }
 
@@ -98,6 +102,18 @@ function adjustToEndView(entries) {
 	}
 }
 
+function disableSideScroll() {
+	monthList.classList.add("isAnimating");
+}
+
+function enableSideScroll() {
+	monthList.classList.remove("isAnimating");
+}
+
+function isTransitionPlaying() {
+	return monthList.classList.contains("isAnimating");
+}
+
 function showBtn(btn) {
 	btn.style.display = "block";
 }
@@ -106,18 +122,28 @@ function hideBtn(btn) {
 	btn.style.display = "none";
 }
 
-function resetTranslate() {
+function scrollToStart() {
 	allMonths.forEach(month => {
 		month.style.transform = `translateX(0)`;
 	});
 }
 
-function wouldScrollPastStart(calculatedTranslateXVal, maxTranslateXVal) {
-	return calculatedTranslateXVal > maxTranslateXVal;
+function scrollToEnd() {
+	const maxAllowedTranslateX = getMaxTranslateX();
+
+	allMonths.forEach(month => {
+		month.style.transform = `translateX(${maxAllowedTranslateX}px)`;
+	});
 }
 
-function wouldScrollPastEnd(calculatedTranslateXVal, maxTranslateXVal) {
-	return calculatedTranslateXVal < maxTranslateXVal;
+function wouldScrollPastStart(calculatedTranslateXVal) {
+	return calculatedTranslateXVal > monthListStartingPosition;
+}
+
+function wouldScrollPastEnd(calculatedTranslateXVal) {
+	const normalisedTranslateXVal = -1 * Math.abs(calculatedTranslateXVal);
+	const maxTranslateXVal = getMaxTranslateX();
+	return normalisedTranslateXVal < maxTranslateXVal;
 }
 
 const options = {
@@ -130,12 +156,18 @@ const endObserver = new IntersectionObserver(adjustToEndView, options);
 startObserver.observe(allMonths[0]);
 endObserver.observe(allMonths[11]);
 
-window.addEventListener("resize", resetTranslate);
+window.addEventListener("resize", scrollToStart);
 
 (function IIFE() {
 	const monthToDisplay = allMonths[1];
 
 	const startingTranslateX = calculateTranslateX(monthToDisplay);
+
+	if (wouldScrollPastEnd(startingTranslateX)) {
+		scrollToEnd();
+
+		return;
+	}
 
 	sideScrollTo(startingTranslateX);
 })();
@@ -146,35 +178,16 @@ function calculateTranslateX(monthToDisplay) {
 	const singleMonthWidth = getSingleMonthWidth();
 
 	const desiredTranslateX =
-		(singleMonthWidth + currentGap) * allMonths.indexOf(monthToDisplay);
+		-1 *
+		Math.abs(
+			(singleMonthWidth + currentGap) * allMonths.indexOf(monthToDisplay)
+		);
 
 	return desiredTranslateX;
 }
 
 function sideScrollTo(translateXValue) {
 	const normalisedTranslateXVal = -1 * Math.abs(translateXValue);
-
-	const singleMonthWidth = getSingleMonthWidth();
-
-	const monthListWidth = getMonthlistWidth();
-
-	const monthsCurrentlyDisplayed = getDisplayedMonths(
-		singleMonthWidth,
-		monthListWidth
-	);
-
-	const maxAllowedTranslateX = getMaxTranslateX(
-		monthsCurrentlyDisplayed,
-		monthListWidth
-	);
-
-	if (wouldScrollPastEnd(normalisedTranslateXVal, maxAllowedTranslateX)) {
-		allMonths.forEach(month => {
-			month.style.transform = `translateX(${maxAllowedTranslateX}px)`;
-		});
-
-		return;
-	}
 
 	allMonths.forEach(month => {
 		month.style.transform = `translateX(${normalisedTranslateXVal}px)`;
