@@ -5,28 +5,29 @@ const allMonths = Array.from(document.querySelectorAll(".habit__month"));
 const prevBtn = document.querySelector(".habit__button--prev");
 const nextBtn = document.querySelector(".habit__button--next");
 
-const startingListPosition = allMonths[0].getBoundingClientRect().x;
+const monthListStartingPosition = getMonthlistXPosition();
 
 prevBtn.addEventListener("click", () => {
 	if (monthList.classList.contains("isAnimating")) return;
 
 	monthList.classList.add("isAnimating");
-	const currentListPosition = allMonths[0].getBoundingClientRect().x;
 
-	const currentGap =
-		allMonths[1].getBoundingClientRect().x -
-		(allMonths[0].getBoundingClientRect().x +
-			allMonths[0].getBoundingClientRect().width);
+	const monthListCurrentPosition = getMonthlistXPosition();
 
-	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
+	const monthListWidth = getMonthlistWidth();
 
 	const requestedTranslateXValue =
-		currentListPosition + currentViewWidth - startingListPosition;
+		monthListCurrentPosition + monthListWidth - monthListStartingPosition;
 
-	scrollToRequestedPosition(requestedTranslateXValue);
+	sideScrollTo(requestedTranslateXValue);
 
-	if (currentListPosition + currentViewWidth > startingListPosition) {
-		scrollToRequestedPosition(0);
+	if (
+		wouldScrollPastStart(
+			monthListCurrentPosition + monthListWidth,
+			monthListStartingPosition
+		)
+	) {
+		resetTranslate();
 	}
 
 	monthList.addEventListener("transitionend", () => {
@@ -39,24 +40,47 @@ nextBtn.addEventListener("click", () => {
 
 	monthList.classList.add("isAnimating");
 
-	const currentListPosition =
-		startingListPosition - allMonths[0].getBoundingClientRect().x;
+	const monthListCurrentPosition =
+		monthListStartingPosition - getMonthlistXPosition();
 
-	const currentGap =
-		allMonths[1].getBoundingClientRect().x -
-		(allMonths[0].getBoundingClientRect().x +
-			allMonths[0].getBoundingClientRect().width);
+	const monthListWidth = getMonthlistWidth();
 
-	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
+	const requestedTranslateX = monthListCurrentPosition + monthListWidth;
 
-	const requestedTranslateX = currentListPosition + currentViewWidth;
-
-	scrollToRequestedPosition(requestedTranslateX);
+	sideScrollTo(requestedTranslateX);
 
 	monthList.addEventListener("transitionend", () => {
 		monthList.classList.remove("isAnimating");
 	});
 });
+
+function getGapWidth() {
+	return (
+		allMonths[1].getBoundingClientRect().x -
+		(allMonths[0].getBoundingClientRect().x +
+			allMonths[0].getBoundingClientRect().width)
+	);
+}
+
+function getMonthlistWidth() {
+	return monthList.getBoundingClientRect().width + getGapWidth();
+}
+
+function getSingleMonthWidth() {
+	return allMonths[0].getBoundingClientRect().width;
+}
+
+function getMonthlistXPosition() {
+	return allMonths[0].getBoundingClientRect().x;
+}
+
+function getDisplayedMonths(singleMonthWidth, monthListWidth) {
+	return Math.round(monthListWidth / singleMonthWidth);
+}
+
+function getMaxTranslateX(monthsCurrentlyDisplayed, monthListWidth) {
+	return -1 * ((12 / monthsCurrentlyDisplayed - 1) * monthListWidth);
+}
 
 function adjustToStartView(entries) {
 	if (entries[0].isIntersecting) {
@@ -88,6 +112,14 @@ function resetTranslate() {
 	});
 }
 
+function wouldScrollPastStart(calculatedTranslateXVal, maxTranslateXVal) {
+	return calculatedTranslateXVal > maxTranslateXVal;
+}
+
+function wouldScrollPastEnd(calculatedTranslateXVal, maxTranslateXVal) {
+	return calculatedTranslateXVal < maxTranslateXVal;
+}
+
 const options = {
 	root: document.querySelector(".habit"),
 };
@@ -101,20 +133,17 @@ endObserver.observe(allMonths[11]);
 window.addEventListener("resize", resetTranslate);
 
 (function IIFE() {
-	const monthToDisplay = allMonths[9];
+	const monthToDisplay = allMonths[1];
 
 	const startingTranslateX = calculateTranslateX(monthToDisplay);
 
-	scrollToRequestedPosition(startingTranslateX);
+	sideScrollTo(startingTranslateX);
 })();
 
 function calculateTranslateX(monthToDisplay) {
-	const currentGap =
-		allMonths[1].getBoundingClientRect().x -
-		(allMonths[0].getBoundingClientRect().x +
-			allMonths[0].getBoundingClientRect().width);
+	const currentGap = getGapWidth();
 
-	const singleMonthWidth = allMonths[0].getBoundingClientRect().width;
+	const singleMonthWidth = getSingleMonthWidth();
 
 	const desiredTranslateX =
 		(singleMonthWidth + currentGap) * allMonths.indexOf(monthToDisplay);
@@ -122,35 +151,26 @@ function calculateTranslateX(monthToDisplay) {
 	return desiredTranslateX;
 }
 
-function scrollToRequestedPosition(translateXValue) {
+function sideScrollTo(translateXValue) {
 	const normalisedTranslateXVal = -1 * Math.abs(translateXValue);
 
-	const currentGap =
-		allMonths[1].getBoundingClientRect().x -
-		(allMonths[0].getBoundingClientRect().x +
-			allMonths[0].getBoundingClientRect().width);
+	const singleMonthWidth = getSingleMonthWidth();
 
-	const singleMonthWidth = allMonths[0].getBoundingClientRect().width;
+	const monthListWidth = getMonthlistWidth();
 
-	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
+	const monthsCurrentlyDisplayed = getDisplayedMonths(
+		singleMonthWidth,
+		monthListWidth
+	);
 
-	const monthsOnPage = Math.round(currentViewWidth / singleMonthWidth);
+	const maxAllowedTranslateX = getMaxTranslateX(
+		monthsCurrentlyDisplayed,
+		monthListWidth
+	);
 
-	const maxTranslateX = 0;
-
-	const minTranslateX = -1 * ((12 / monthsOnPage - 1) * currentViewWidth);
-
-	if (normalisedTranslateXVal > maxTranslateX) {
+	if (wouldScrollPastEnd(normalisedTranslateXVal, maxAllowedTranslateX)) {
 		allMonths.forEach(month => {
-			month.style.transform = `translateX(${maxTranslateX})`;
-		});
-
-		return;
-	}
-
-	if (normalisedTranslateXVal < minTranslateX) {
-		allMonths.forEach(month => {
-			month.style.transform = `translateX(${minTranslateX}px)`;
+			month.style.transform = `translateX(${maxAllowedTranslateX}px)`;
 		});
 
 		return;
