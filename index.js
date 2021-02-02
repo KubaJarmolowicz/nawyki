@@ -20,15 +20,14 @@ prevBtn.addEventListener("click", () => {
 
 	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
-	allMonths.forEach(month => {
-		if (currentListPosition + currentViewWidth > startingListPosition) {
-			month.style.transform = `translateX(0)`;
-			return;
-		}
-		month.style.transform = `translateX(${
-			currentListPosition + currentViewWidth - startingListPosition
-		}px)`;
-	});
+	const requestedTranslateXValue =
+		currentListPosition + currentViewWidth - startingListPosition;
+
+	scrollToRequestedPosition(requestedTranslateXValue);
+
+	if (currentListPosition + currentViewWidth > startingListPosition) {
+		scrollToRequestedPosition(0);
+	}
 
 	monthList.addEventListener("transitionend", () => {
 		monthList.classList.remove("isAnimating");
@@ -50,21 +49,9 @@ nextBtn.addEventListener("click", () => {
 
 	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
-	const singleMonthWidth = allMonths[0].getBoundingClientRect().width;
+	const requestedTranslateX = currentListPosition + currentViewWidth;
 
-	const monthsOnPage = Math.round(currentViewWidth / singleMonthWidth);
-
-	const maxTranslate = (12 / monthsOnPage - 1) * currentViewWidth;
-
-	allMonths.forEach(month => {
-		if (currentListPosition + currentViewWidth > maxTranslate) {
-			month.style.transform = `translateX(-${maxTranslate}px)`;
-			return;
-		}
-		month.style.transform = `translateX(-${
-			currentListPosition + currentViewWidth
-		}px)`;
-	});
+	scrollToRequestedPosition(requestedTranslateX);
 
 	monthList.addEventListener("transitionend", () => {
 		monthList.classList.remove("isAnimating");
@@ -118,7 +105,7 @@ window.addEventListener("resize", resetTranslate);
 
 	const startingTranslateX = calculateTranslateX(monthToDisplay);
 
-	scrollToRequestedMonth(startingTranslateX);
+	scrollToRequestedPosition(startingTranslateX);
 })();
 
 function calculateTranslateX(monthToDisplay) {
@@ -127,9 +114,25 @@ function calculateTranslateX(monthToDisplay) {
 		(allMonths[0].getBoundingClientRect().x +
 			allMonths[0].getBoundingClientRect().width);
 
-	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
+	const singleMonthWidth = allMonths[0].getBoundingClientRect().width;
+
+	const desiredTranslateX =
+		(singleMonthWidth + currentGap) * allMonths.indexOf(monthToDisplay);
+
+	return desiredTranslateX;
+}
+
+function scrollToRequestedPosition(translateXValue) {
+	const normalisedTranslateXVal = -1 * Math.abs(translateXValue);
+
+	const currentGap =
+		allMonths[1].getBoundingClientRect().x -
+		(allMonths[0].getBoundingClientRect().x +
+			allMonths[0].getBoundingClientRect().width);
 
 	const singleMonthWidth = allMonths[0].getBoundingClientRect().width;
+
+	const currentViewWidth = monthList.getBoundingClientRect().width + currentGap;
 
 	const monthsOnPage = Math.round(currentViewWidth / singleMonthWidth);
 
@@ -137,22 +140,23 @@ function calculateTranslateX(monthToDisplay) {
 
 	const minTranslateX = -1 * ((12 / monthsOnPage - 1) * currentViewWidth);
 
-	const desiredTranslateX =
-		-1 * ((singleMonthWidth + currentGap) * allMonths.indexOf(monthToDisplay));
+	if (normalisedTranslateXVal > maxTranslateX) {
+		allMonths.forEach(month => {
+			month.style.transform = `translateX(${maxTranslateX})`;
+		});
 
-	if (desiredTranslateX > maxTranslateX) {
-		return maxTranslateX;
+		return;
 	}
 
-	if (desiredTranslateX < minTranslateX) {
-		return `${minTranslateX}px`;
+	if (normalisedTranslateXVal < minTranslateX) {
+		allMonths.forEach(month => {
+			month.style.transform = `translateX(${minTranslateX}px)`;
+		});
+
+		return;
 	}
 
-	return `${desiredTranslateX}px`;
-}
-
-function scrollToRequestedMonth(translateXValue) {
 	allMonths.forEach(month => {
-		month.style.transform = `translateX(${translateXValue})`;
+		month.style.transform = `translateX(${normalisedTranslateXVal}px)`;
 	});
 }
