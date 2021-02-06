@@ -1,4 +1,4 @@
-import { nextBtn, prevBtn } from "./DOMRefferences.js";
+import { nextBtn, prevBtn } from "../DOMRefferences.js";
 
 function showBtn(btn) {
 	btn.style.display = "block";

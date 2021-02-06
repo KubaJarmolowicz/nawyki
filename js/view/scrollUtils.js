@@ -1,4 +1,4 @@
-import { allMonths, monthList } from "./DOMRefferences.js";
+import { allMonths, monthList } from "../DOMRefferences.js";
 
 function getGapWidth() {
 	return (

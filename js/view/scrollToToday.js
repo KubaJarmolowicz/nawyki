@@ -1,4 +1,4 @@
-import { allMonths } from "./DOMRefferences.js";
+import { allMonths } from "../DOMRefferences.js";
 import {
 	sideScrollTo,
 	getGapWidth,

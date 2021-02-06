@@ -1,11 +1,11 @@
 "use strict";
 
 import { prevBtn, nextBtn, allMonths } from "./DOMRefferences.js";
-import { scrollToStart } from "./scrollUtils.js";
-import { startObserver, endObserver } from "./intersectionObservers.js";
-import { scrollToToday } from "./scrollToToday.js";
-import { displayFollowingMonths } from "./displayFollowingMonths.js";
-import { displayPreviousMonths } from "./displayPreviousMonths.js";
+import { scrollToStart } from "./view/scrollUtils.js";
+import { startObserver, endObserver } from "./view/intersectionObservers.js";
+import { scrollToToday } from "./view/scrollToToday.js";
+import { displayFollowingMonths } from "./view/displayFollowingMonths.js";
+import { displayPreviousMonths } from "./view/displayPreviousMonths.js";
 
 prevBtn.addEventListener("click", displayPreviousMonths);
 
