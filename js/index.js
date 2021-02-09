@@ -22,12 +22,8 @@ window.addEventListener("resize", scrollToStart);
 
 scrollToToday();
 
-console.log(appManager.saveNewState());
+//showOirginalTemplate();
 
-showOirginalTemplate();
-
-appManager.resetState();
 //appManager.resetState();
-//console.log(appManager.displayCurrentSavedState());
-//appManager.updateState();
-//appManager.displayCurrentSavedState();
+
+console.log(appManager.renderCurrentState());

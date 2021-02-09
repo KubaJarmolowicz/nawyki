@@ -3,36 +3,44 @@ import { stateTemplate } from "./stateTemplate.js";
 import { YearManager } from "./YearManager.js";
 
 const appManager = {
-	getCurrentYear(date) {
-		return date.getFullYear().toString();
-	},
+	// getCurrentYear(date) {
+	// 	return date.getFullYear().toString();
+	// },
 
 	wasUsedBefore() {
-		return storageManager.getCurrentState() !== "";
+		return storageManager.getCurrentState() !== null;
 	},
 
-	saveNewState() {
+	createNewState() {
 		this.updateState(stateTemplate);
 
 		const state = storageManager.getCurrentState();
 
-		state.latestSavedDate = new Date();
-		state.currentYear = this.getCurrentYear(state.latestSavedDate);
+		state.currentYear = new Date().getFullYear();
 
-		const currentView = new YearManager(state.latestSavedDate);
+		this.updateState(state);
+
+		const currentView = new YearManager(new Date());
 
 		currentView.init();
 
-		return state;
+		return state; // --> do usuniecia potem
 	},
 
 	hasValidSavedState() {
-		const currentYear = this.getCurrentYear();
-		return storageManager.getCurrentState()?.currentYear === currentYear;
+		const state = storageManager.getCurrentState();
+
+		const currentYear = new Date().getFullYear();
+		return state.currentYear === currentYear;
 	},
 
-	displayCurrentSavedState() {
-		return storageManager.getCurrentState();
+	displayExistingState() {
+		const state = storageManager.getCurrentState();
+
+		const currentView = new YearManager(new Date());
+
+		currentView.init();
+		return state;
 	},
 
 	updateState(stateObj) {
@@ -45,7 +53,12 @@ const appManager = {
 
 	renderCurrentState() {
 		if (!this.wasUsedBefore()) {
-			this.saveNewState();
+			this.createNewState();
+			return "Creating new state...";
+		}
+		if (this.hasValidSavedState()) {
+			this.displayExistingState();
+			return "Retrieving existing state...";
 		}
 	},
 };
