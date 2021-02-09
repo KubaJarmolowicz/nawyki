@@ -1,5 +1,6 @@
 export const stateTemplate = {
 	currentYear: "",
+	latestSavedDate: "",
 	currentMonths: [
 		{
 			name: "Styczeń",

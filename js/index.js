@@ -25,6 +25,8 @@ scrollToToday();
 console.log(appManager.saveNewState());
 
 showOirginalTemplate();
+
+appManager.resetState();
 //appManager.resetState();
 //console.log(appManager.displayCurrentSavedState());
 //appManager.updateState();

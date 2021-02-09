@@ -3,8 +3,8 @@ import { stateTemplate } from "./stateTemplate.js";
 import { YearManager } from "./YearManager.js";
 
 const appManager = {
-	getCurrentYear() {
-		return new Date().getFullYear().toString();
+	getCurrentYear(date) {
+		return date.getFullYear().toString();
 	},
 
 	wasUsedBefore() {
@@ -16,9 +16,10 @@ const appManager = {
 
 		const state = storageManager.getCurrentState();
 
-		state.currentYear = this.getCurrentYear();
+		state.latestSavedDate = new Date();
+		state.currentYear = this.getCurrentYear(state.latestSavedDate);
 
-		const currentView = new YearManager(new Date());
+		const currentView = new YearManager(state.latestSavedDate);
 
 		currentView.init();
 
