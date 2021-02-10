@@ -24,6 +24,6 @@ scrollToToday();
 
 //showOirginalTemplate();
 
-//appManager.resetState();
+appManager.resetAll();
 
-console.log(appManager.renderCurrentState());
+//console.log(appManager.renderCurrentState());

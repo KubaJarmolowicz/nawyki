@@ -15,6 +15,19 @@ class AppStorageManager {
 	resetState() {
 		this.storage.removeItem("savedState");
 	}
+
+	savePastYear(value) {
+		this.storage.setItem("pastYears", JSON.stringify(value));
+	}
+
+	getPastYears() {
+		const pastYears = this.storage.getItem("pastYears");
+		return pastYears ? JSON.parse(pastYears) : null;
+	}
+
+	resetPastYears() {
+		this.storage.removeItem("pastYears");
+	}
 }
 
 const storageManager = new AppStorageManager();
