@@ -1,7 +1,31 @@
 import { Day } from "./Day.js";
 
+const monthNames = [
+	"Styczeń",
+	"Luty",
+	"Marzec",
+	"Kwiecień",
+	"Maj",
+	"Czerwiec",
+	"Lipiec",
+	"Sierpień",
+	"Wrzesień",
+	"Październik",
+	"Listopad",
+	"Grudzień",
+];
+
 export class MonthManager {
-	constructor() {}
+	constructor(date, monthIndex, currentYear) {
+		this._currentYear = currentYear;
+		this._monthIndex = monthIndex;
+		this.name = monthNames[monthIndex];
+		this.numberOfDays = new Date(currentYear, monthIndex + 1, 0).getDate();
+	}
+
+	getDayName(dayNumber) {
+		return new Date(this._currentYear, this._monthIndex, dayNumber).getDay();
+	}
 }
 
 /*

@@ -1,5 +1,16 @@
+const dayNames = [
+	"Niedziela",
+	"Poniedziałek",
+	"Wtorek",
+	"Środa",
+	"Czwartek",
+	"Piątek",
+	"Sobota",
+];
+
 export class Day {
-	constructor() {}
+	constructor(dayNumber, dayIndex, monthName) {}
+	init() {}
 }
 
 /*
