@@ -1,15 +1,5 @@
 import { Day } from "./Day.js";
 
-const dayNames = [
-	"Niedziela",
-	"Poniedziałek",
-	"Wtorek",
-	"Środa",
-	"Czwartek",
-	"Piątek",
-	"Sobota",
-];
-
 const options = { month: "long" };
 const lang = navigator.language;
 
@@ -19,7 +9,7 @@ export class MonthManager {
 		this._monthIndex = monthIndex;
 		this.name = this.getMonthName(currentYear, monthIndex, lang);
 		this.numberOfDays = this.getNumberOfDaysInMonth(currentYear, monthIndex);
-		this.allDays = [];
+		this.allDays = this.getAllDays(this.numberOfDays);
 		this.experimantalDays = [
 			new Day(currentYear, monthIndex, 1),
 			new Day(currentYear, monthIndex, 2),
@@ -37,17 +27,16 @@ export class MonthManager {
 		return new Date(year, monthIndex + 1, 0).getDate();
 	}
 
-	getDayName(dayNumber) {
-		const dayNumberInWeek = new Date(
-			this._currentYear,
-			this._monthIndex,
-			dayNumber
-		).getDay();
-		return dayNames[dayNumberInWeek];
+	getAllDays(numberOfDays) {
+		let allDays = [];
+		for (let i = 1; i <= numberOfDays; i++) {
+			allDays.push(new Day(this._currentYear, this._monthIndex, i));
+		}
+		return allDays;
 	}
 
-	getExperimentalDaysNames() {
-		return this.experimantalDays.map(day => day.name);
+	getAllDaysNames() {
+		return this.allDays.map(day => day.name);
 	}
 }
 

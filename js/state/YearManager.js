@@ -47,23 +47,14 @@ export class YearManager {
 		});
 	}
 
-	renderDays() {
+	renderAllDays() {
 		this.months.forEach(month => {
-			console.log(month.numberOfDays);
-		});
-
-		console.log(this.months[0].getDayName(1));
-	}
-
-	renderExperimentalDays() {
-		this.months.forEach(month => {
-			console.log(month.getExperimentalDaysNames());
+			console.log(month.getAllDaysNames());
 		});
 	}
 
 	render() {
 		this.renderMonthNames();
-		this.renderDays();
-		this.renderExperimentalDays();
+		this.renderAllDays();
 	}
 }
