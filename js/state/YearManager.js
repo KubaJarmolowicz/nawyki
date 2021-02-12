@@ -55,8 +55,15 @@ export class YearManager {
 		console.log(this.months[0].getDayName(1));
 	}
 
+	renderExperimentalDays() {
+		this.months.forEach(month => {
+			console.log(month.getExperimentalDaysNames());
+		});
+	}
+
 	render() {
 		this.renderMonthNames();
 		this.renderDays();
+		this.renderExperimentalDays();
 	}
 }
