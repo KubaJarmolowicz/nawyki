@@ -1,31 +1,34 @@
 @import "./resets";
 @import "./global";
+@import "./colors";
+@import "./mixins";
 
 .habit {
 	position: relative;
 	height: 80%;
-	// border: 1px solid green;
-	padding: 1rem;
+	//border: 1px solid green;
+	padding: 3rem;
+	background-color: $white;
 
 	&__button {
+		@include buttons;
+
 		background-color: transparent;
-		border: 40px solid transparent;
+		border: 25px solid transparent;
 		position: absolute;
 		top: 0;
-
-		cursor: pointer;
 	}
 
 	&__button--prev {
-		border-right-color: red;
-		left: -6.5rem;
-		top: 13rem;
+		border-right-color: $buttons;
+		left: -1.8rem;
+		top: 14.3rem;
 	}
 
 	&__button--next {
-		border-left-color: red;
-		right: -6.5rem;
-		top: 13rem;
+		border-left-color: $buttons;
+		right: -1.8rem;
+		top: 14.3rem;
 	}
 
 	&__header {
@@ -51,7 +54,7 @@
 	&__month {
 		height: 100%;
 		border: 0;
-		background: darkgray;
+		background: $white;
 		// border: 1px solid black;
 		flex: 1 0 100%;
 		padding: 1rem;
@@ -62,14 +65,29 @@
 	}
 
 	&__month-header {
-		height: 20%;
-		border: 1px solid red;
+		height: 15%;
+		background-color: $dark-grey;
+		color: $white;
+		//border: 1px solid red;
 		margin-bottom: 1rem;
+		padding: 1rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__monthName {
+		font-size: 2rem;
+	}
+
+	&__greenDays {
+		font-size: 1.5rem;
+		align-self: flex-end;
 	}
 
 	&__days-list {
 		height: calc(80% - 2rem);
-		border: 1px solid steelblue;
+		// border: 1px solid steelblue;
 		overflow-y: scroll;
 		background-color: white;
 		padding: 1rem;
@@ -80,7 +98,7 @@
 		&::-webkit-scrollbar {
 			width: 1rem;
 			&-track {
-				background-color: #e3e3e3;
+				background-color: $light-grey;
 				border-radius: 10px;
 				box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 				-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -88,6 +106,7 @@
 
 			&-thumb {
 				border-radius: 10px;
+				background-color: $grey;
 				box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 				-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 			}
@@ -96,7 +115,30 @@
 
 	&__day {
 		flex: 1 0 25%;
-		border: 1px solid darkmagenta;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		//border: 1px solid darkmagenta;
+		padding: 0 1rem;
+		background-color: $light-grey;
+		font-size: 2rem;
+	}
+
+	&__dayNumName {
+		color: $day-number;
+
+		span {
+			color: $day-name;
+		}
+	}
+
+	&__checkBox {
+		@include buttons;
+
+		padding: 2rem;
+		border-radius: 50%;
+		border: none;
+		background-color: $grey;
 	}
 }
 

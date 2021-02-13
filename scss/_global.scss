@@ -1,11 +1,13 @@
+@import "./colors";
+
 body {
-	background-color: lightgrey;
+	background-color: $background;
 	height: 100vh;
 	padding: 3rem;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 main {
 	height: 100%;
-	// border: 3px solid red;
+	//border: 3px solid red;
 }
