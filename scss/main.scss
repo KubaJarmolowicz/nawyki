@@ -140,6 +140,14 @@
 		border: none;
 		background-color: $grey;
 	}
+
+	&__checkBox--isGreen {
+		background-color: $green;
+	}
+
+	&__checkBox--isRed {
+		background-color: $red;
+	}
 }
 
 @media (min-width: 630px) {
