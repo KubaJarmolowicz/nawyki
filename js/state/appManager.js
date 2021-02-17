@@ -42,7 +42,18 @@ const appManager = {
 		currentView.render();
 	},
 
-	updateState(stateObj) {
+	updateState(stateObj = storageManager.getCurrentState(), options = null) {
+		if (options) {
+			const { monthIndex, dayNumber, isActive } = options;
+			const currentState = storageManager.getCurrentState();
+
+			currentState.currentMonths[monthIndex].habitStatusOnDay[
+				dayNumber
+			] = isActive;
+
+			storageManager.saveState(currentState);
+			return;
+		}
 		storageManager.saveState(stateObj);
 	},
 

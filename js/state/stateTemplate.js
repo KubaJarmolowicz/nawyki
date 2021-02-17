@@ -4,51 +4,51 @@ export const stateTemplate = {
 	currentMonths: [
 		{
 			name: "Styczeń",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Luty",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Marzec",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Kwiecień",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Maj",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Czerwiec",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Lipiec",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Sierpień",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Wrzesień",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Październik",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Listopad",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 		{
 			name: "Grudzień",
-			habitContinuedDates: [],
+			habitStatusOnDay: {},
 		},
 	],
 };

@@ -27,6 +27,6 @@ appManager.resetAll();
 console.log(appManager.renderCurrentState());
 
 monthList.addEventListener("habitstatechange", event => {
-	//appManager.updateState(event);
-	console.log(event.detail);
+	appManager.updateState(undefined, event.detail);
+	//console.log(event.detail);
 });
