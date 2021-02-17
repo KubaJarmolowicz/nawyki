@@ -8,7 +8,14 @@ export class Day {
 		this.number = dayNumber;
 		this.name = this.getDayName(currentYear, monthIndex, dayNumber, lang);
 	}
-	init() {}
+	init() {
+		const day = document.createElement("li");
+		day.classList.add("habit__day");
+
+		day.innerHTML = `<p class="habit__dayNumName">${this.number} <span>${this.name}</span></p><button class="habit__checkBox"></button>`;
+
+		return day;
+	}
 
 	getDayName(year, monthIndex, dayNumber, language) {
 		return new Intl.DateTimeFormat(language, options).format(
@@ -16,10 +23,3 @@ export class Day {
 		);
 	}
 }
-
-/*
-
-Klasa tworzaca li z kazdym dniem w roku, gdzie bd numer dnia, nazwa dnia tygodnia i
-to koleczko do klikniecia
-
-*/

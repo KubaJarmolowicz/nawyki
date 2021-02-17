@@ -10,12 +10,27 @@ export class MonthManager {
 		this.name = this.getMonthName(currentYear, monthIndex, lang);
 		this.numberOfDays = this.getNumberOfDaysInMonth(currentYear, monthIndex);
 		this.allDays = this.getAllDays(this.numberOfDays);
-		this.experimantalDays = [
-			new Day(currentYear, monthIndex, 1),
-			new Day(currentYear, monthIndex, 2),
-			new Day(currentYear, monthIndex, 3),
-		];
+
+		this._DOMRefference = document.querySelector(
+			`.habit__month--${
+				monthIndex < 9 ? "0" + (monthIndex + 1) : monthIndex + 1
+			}`
+		);
+
+		this._DOMMonthName = this._DOMRefference.querySelector(".habit__monthName");
+		this._DOMDaysList = this._DOMRefference.querySelector(".habit__days-list");
 	}
+	initDaysList() {
+		const fullList = document.createDocumentFragment();
+		this.allDays.forEach(day => {
+			const renderableDay = day.init();
+			fullList.appendChild(renderableDay);
+		});
+
+		return fullList;
+	}
+
+	getMonthNameRefference(monthIndex) {}
 
 	getMonthName(year, monthIndex, language) {
 		return new Intl.DateTimeFormat(language, options).format(
