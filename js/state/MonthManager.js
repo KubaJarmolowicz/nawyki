@@ -22,11 +22,21 @@ export class MonthManager {
 
 		this._DOMRefference.addEventListener("changeActivation", event => {
 			event.stopPropagation();
-			console.log(
-				`works from ${this.name}`,
-				event.detail.number,
-				event.detail.name
+			this._DOMRefference.dispatchEvent(
+				new CustomEvent("habitstatechange", {
+					bubbles: true,
+					detail: {
+						monthIndex: this._monthIndex,
+						dayNumber: event.detail.number,
+						isActive: event.detail.isActive,
+					},
+				})
 			);
+			// console.log(
+			// 	`works from ${this.name}`,
+			// 	event.detail.number,
+			// 	event.detail.name
+			// );
 		});
 	}
 	initDaysList() {

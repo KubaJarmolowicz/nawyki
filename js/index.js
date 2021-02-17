@@ -1,6 +1,6 @@
 "use strict";
 
-import { prevBtn, nextBtn, allMonths } from "./DOMRefferences.js";
+import { prevBtn, nextBtn, allMonths, monthList } from "./DOMRefferences.js";
 import { scrollToStart } from "./view/scrollUtils.js";
 import { startObserver, endObserver } from "./view/intersectionObservers.js";
 import { scrollToToday } from "./view/scrollToToday.js";
@@ -25,3 +25,8 @@ scrollToToday();
 appManager.resetAll();
 
 console.log(appManager.renderCurrentState());
+
+monthList.addEventListener("habitstatechange", event => {
+	//appManager.updateState(event);
+	console.log(event.detail);
+});

@@ -28,12 +28,21 @@ export class Day {
 
 	attachClickHandler(DOMRefference) {
 		DOMRefference.querySelector("button").addEventListener("click", event => {
+			if (!DOMRefference.classList.contains("habit__day--isGreen")) {
+				DOMRefference.classList.remove("habit__day--isRed");
+				DOMRefference.classList.add("habit__day--isGreen");
+			} else {
+				DOMRefference.classList.remove("habit__day--isGreen");
+				DOMRefference.classList.add("habit__day--isRed");
+			}
+
 			event.target.dispatchEvent(
 				new CustomEvent("changeActivation", {
 					bubbles: true,
 					detail: {
-						name: event.target.parentElement.getAttribute("data-name"),
-						number: event.target.parentElement.getAttribute("data-number"),
+						name: DOMRefference.getAttribute("data-name"),
+						number: DOMRefference.getAttribute("data-number"),
+						isActive: DOMRefference.classList.contains("habit__day--isGreen"),
 					},
 				})
 			);

@@ -123,6 +123,18 @@
 		padding: 0 1rem;
 		background-color: $light-grey;
 		font-size: 2rem;
+
+		&--isGreen {
+			.habit__checkBox {
+				background-color: $green;
+			}
+		}
+
+		&--isRed {
+			.habit__checkBox {
+				background-color: $red;
+			}
+		}
 	}
 
 	&__dayNumName {
@@ -140,14 +152,6 @@
 		border-radius: 50%;
 		border: none;
 		background-color: $grey;
-	}
-
-	&__checkBox--isGreen {
-		background-color: $green;
-	}
-
-	&__checkBox--isRed {
-		background-color: $red;
 	}
 }
 
