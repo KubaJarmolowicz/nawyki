@@ -30,7 +30,6 @@ export class YearManager {
 
 	renderAllDays() {
 		this.months.forEach(month => {
-			// console.log(month.getAllDaysNames());
 			month._DOMDaysList.appendChild(month.initDaysList());
 		});
 	}
