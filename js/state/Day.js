@@ -25,4 +25,18 @@ export class Day {
 
 		return day;
 	}
+
+	attachClickHandler(DOMRefference) {
+		DOMRefference.querySelector("button").addEventListener("click", event => {
+			event.target.dispatchEvent(
+				new CustomEvent("changeActivation", {
+					bubbles: true,
+					detail: {
+						name: event.target.parentElement.getAttribute("data-name"),
+						number: event.target.parentElement.getAttribute("data-number"),
+					},
+				})
+			);
+		});
+	}
 }

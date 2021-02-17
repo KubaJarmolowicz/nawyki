@@ -34,17 +34,8 @@ export class MonthManager {
 		this.allDays.forEach(day => {
 			const renderableDay = day.init();
 
-			renderableDay.querySelector("button").addEventListener("click", event => {
-				event.target.dispatchEvent(
-					new CustomEvent("changeActivation", {
-						bubbles: true,
-						detail: {
-							name: event.target.parentElement.getAttribute("data-name"),
-							number: event.target.parentElement.getAttribute("data-number"),
-						},
-					})
-				);
-			});
+			day.attachClickHandler(renderableDay);
+
 			fullList.appendChild(renderableDay);
 		});
 
