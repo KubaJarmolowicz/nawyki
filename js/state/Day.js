@@ -1,3 +1,5 @@
+import { isActive, makeActive, makeInactive } from "./helpers.js";
+
 const options = { weekday: "long" };
 const lang = navigator.language;
 
@@ -23,29 +25,32 @@ export class Day {
 
 		day.innerHTML = `<p class="habit__dayNumName">${this.number} <span>${this.name}</span></p><button class="habit__checkBox"></button>`;
 
+		this.DOMRefference = day;
+
 		return day;
 	}
 
 	attachClickHandler(DOMRefference) {
-		DOMRefference.querySelector("button").addEventListener("click", event => {
-			if (!DOMRefference.classList.contains("habit__day--isGreen")) {
-				DOMRefference.classList.remove("habit__day--isRed");
-				DOMRefference.classList.add("habit__day--isGreen");
-			} else {
-				DOMRefference.classList.remove("habit__day--isGreen");
-				DOMRefference.classList.add("habit__day--isRed");
-			}
+		this.DOMRefference.querySelector("button").addEventListener(
+			"click",
+			event => {
+				if (!isActive(this.DOMRefference)) {
+					makeActive(this.DOMRefference);
+				} else {
+					makeInactive(this.DOMRefference);
+				}
 
-			event.target.dispatchEvent(
-				new CustomEvent("changeActivation", {
-					bubbles: true,
-					detail: {
-						name: DOMRefference.getAttribute("data-name"),
-						number: DOMRefference.getAttribute("data-number"),
-						isActive: DOMRefference.classList.contains("habit__day--isGreen"),
-					},
-				})
-			);
-		});
+				this.DOMRefference.dispatchEvent(
+					new CustomEvent("changeactivestate", {
+						bubbles: true,
+						detail: {
+							name: this.DOMRefference.getAttribute("data-name"),
+							number: this.DOMRefference.getAttribute("data-number"),
+							isActive: isActive(this.DOMRefference),
+						},
+					})
+				);
+			}
+		);
 	}
 }

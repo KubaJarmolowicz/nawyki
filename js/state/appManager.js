@@ -8,7 +8,7 @@ const appManager = {
 	},
 
 	createNewState() {
-		this.updateState(stateTemplate);
+		this.setState(stateTemplate);
 
 		const state = storageManager.getCurrentState();
 
@@ -18,7 +18,7 @@ const appManager = {
 
 		state.currentYear = now.getFullYear();
 
-		this.updateState(state);
+		this.setState(state);
 
 		const currentView = new YearManager(new Date(state.lastSavedDate));
 
@@ -35,26 +35,24 @@ const appManager = {
 	displayExistingState() {
 		const state = storageManager.getCurrentState();
 
-		this.updateState(state);
-
 		const currentView = new YearManager(new Date(state.lastSavedDate));
 
 		currentView.render();
 	},
 
-	updateState(stateObj = storageManager.getCurrentState(), options = null) {
-		if (options) {
-			const { monthIndex, dayNumber, isActive } = options;
-			const currentState = storageManager.getCurrentState();
-
-			currentState.currentMonths[monthIndex].habitStatusOnDay[
-				dayNumber
-			] = isActive;
-
-			storageManager.saveState(currentState);
-			return;
-		}
+	setState(stateObj) {
 		storageManager.saveState(stateObj);
+	},
+
+	updateState(options) {
+		const { monthIndex, dayNumber, isActive } = options;
+		const currentState = storageManager.getCurrentState();
+
+		currentState.currentMonths[monthIndex].habitStatusOnDay[
+			dayNumber
+		] = isActive;
+
+		this.setState(currentState);
 	},
 
 	resetState() {

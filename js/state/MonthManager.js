@@ -20,7 +20,7 @@ export class MonthManager {
 		this._DOMMonthName = this._DOMRefference.querySelector(".habit__monthName");
 		this._DOMDaysList = this._DOMRefference.querySelector(".habit__days-list");
 
-		this._DOMRefference.addEventListener("changeActivation", event => {
+		this._DOMRefference.addEventListener("changeactivestate", event => {
 			event.stopPropagation();
 			this._DOMRefference.dispatchEvent(
 				new CustomEvent("habitstatechange", {
@@ -32,21 +32,16 @@ export class MonthManager {
 					},
 				})
 			);
-			// console.log(
-			// 	`works from ${this.name}`,
-			// 	event.detail.number,
-			// 	event.detail.name
-			// );
 		});
 	}
 	initDaysList() {
 		const fullList = document.createDocumentFragment();
 		this.allDays.forEach(day => {
-			const renderableDay = day.init();
+			day.init();
 
-			day.attachClickHandler(renderableDay);
+			day.attachClickHandler();
 
-			fullList.appendChild(renderableDay);
+			fullList.appendChild(day.DOMRefference);
 		});
 
 		return fullList;
@@ -74,16 +69,3 @@ export class MonthManager {
 		return this.allDays.map(day => day.name);
 	}
 }
-
-/*
-
-MonthManagery sa tworzone tylko przez YearManagera i tylko trakuja co zostalo klikniete,
-ile klikow w miesiacu i moga sterowac kolorkiem tych kolek, wysylajac info o tym do Yearmanagera.
-
-Moze przyjmowac month od yearmanagera w constructorze i potem dzielic na dni itd.?
-
-Tutaj metody ilosci dni, rozkladu dni w miesiacach itd.
-
-Ilosc dni lepiej na Yearmanagerze czy tutaj..?
-
-*/
