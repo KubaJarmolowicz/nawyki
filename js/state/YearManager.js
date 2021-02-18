@@ -1,22 +1,23 @@
 import { MonthManager } from "./MonthManager.js";
 
 export class YearManager {
-	constructor(date) {
-		this._date = date;
-		this.currentYear = date.getFullYear();
+	constructor(state) {
+		this._date = new Date(state.lastSavedDate);
+
+		this.currentYear = this._date.getFullYear();
 		this.months = [
-			new MonthManager(date, 0, this.currentYear),
-			new MonthManager(date, 1, this.currentYear),
-			new MonthManager(date, 2, this.currentYear),
-			new MonthManager(date, 3, this.currentYear),
-			new MonthManager(date, 4, this.currentYear),
-			new MonthManager(date, 5, this.currentYear),
-			new MonthManager(date, 6, this.currentYear),
-			new MonthManager(date, 7, this.currentYear),
-			new MonthManager(date, 8, this.currentYear),
-			new MonthManager(date, 9, this.currentYear),
-			new MonthManager(date, 10, this.currentYear),
-			new MonthManager(date, 11, this.currentYear),
+			new MonthManager(state, 0, this.currentYear),
+			new MonthManager(state, 1, this.currentYear),
+			new MonthManager(state, 2, this.currentYear),
+			new MonthManager(state, 3, this.currentYear),
+			new MonthManager(state, 4, this.currentYear),
+			new MonthManager(state, 5, this.currentYear),
+			new MonthManager(state, 6, this.currentYear),
+			new MonthManager(state, 7, this.currentYear),
+			new MonthManager(state, 8, this.currentYear),
+			new MonthManager(state, 9, this.currentYear),
+			new MonthManager(state, 10, this.currentYear),
+			new MonthManager(state, 11, this.currentYear),
 		];
 	}
 

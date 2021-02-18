@@ -20,7 +20,7 @@ const appManager = {
 
 		this.setState(state);
 
-		const currentView = new YearManager(new Date(state.lastSavedDate));
+		const currentView = new YearManager(state);
 
 		currentView.render();
 	},
@@ -35,7 +35,7 @@ const appManager = {
 	displayExistingState() {
 		const state = storageManager.getCurrentState();
 
-		const currentView = new YearManager(new Date(state.lastSavedDate));
+		const currentView = new YearManager(state);
 
 		currentView.render();
 	},

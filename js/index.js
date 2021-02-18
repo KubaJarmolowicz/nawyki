@@ -28,5 +28,4 @@ console.log(appManager.renderCurrentState());
 
 monthList.addEventListener("habitstatechange", event => {
 	appManager.updateState(event.detail);
-	//console.log(event.detail);
 });

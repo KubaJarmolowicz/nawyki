@@ -1,15 +1,17 @@
 import { Day } from "./Day.js";
+import { makeActive, makeInactive } from "./helpers.js";
 
 const options = { month: "long" };
 const lang = navigator.language;
 
 export class MonthManager {
-	constructor(date, monthIndex, currentYear) {
+	constructor(state, monthIndex, currentYear) {
 		this._currentYear = currentYear;
 		this._monthIndex = monthIndex;
 		this.name = this.getMonthName(currentYear, monthIndex, lang);
 		this.numberOfDays = this.getNumberOfDaysInMonth(currentYear, monthIndex);
 		this.allDays = this.getAllDays(this.numberOfDays);
+		this.daysWithChangedStatus = this.getDaysWithChangedStatus(state);
 
 		this._DOMRefference = document.querySelector(
 			`.habit__month--${
@@ -36,10 +38,21 @@ export class MonthManager {
 	}
 	initDaysList() {
 		const fullList = document.createDocumentFragment();
-		this.allDays.forEach(day => {
+
+		const previouslyModifiedDays = Object.keys(this.daysWithChangedStatus);
+
+		this.allDays.forEach((day, index) => {
 			day.init();
 
 			day.attachClickHandler();
+
+			if (previouslyModifiedDays.includes((index + 1).toString())) {
+				const dayStatus = this.daysWithChangedStatus[`${index + 1}`];
+
+				dayStatus
+					? makeActive(day.DOMRefference)
+					: makeInactive(day.DOMRefference);
+			}
 
 			fullList.appendChild(day.DOMRefference);
 		});
@@ -67,5 +80,14 @@ export class MonthManager {
 
 	getAllDaysNames() {
 		return this.allDays.map(day => day.name);
+	}
+
+	getDaysWithChangedStatus({ currentMonths }) {
+		const daysWithChangedStatus =
+			currentMonths[this._monthIndex].habitStatusOnDay;
+
+		return Object.keys(daysWithChangedStatus).length !== 0
+			? daysWithChangedStatus
+			: {};
 	}
 }
